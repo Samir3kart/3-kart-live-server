@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="az">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<title>3 Kart Live</title>
+<style>
+:root{--bg:#050817;--p:#0c1230;--line:#293260;--txt:#f7f8ff;--mut:#9da7c8;--green:#17e98b;--pink:#ff2d7a;--gold:#ffd45b}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% 0,#19224d,#050817 48%,#02030a);color:var(--txt);font-family:system-ui,-apple-system,Segoe UI,sans-serif}.app{max-width:1450px;margin:auto;padding:14px;min-height:100vh}
+.top{display:grid;grid-template-columns:1fr 2fr 1fr;gap:14px;align-items:center;padding:8px 0 16px;border-bottom:1px solid #20264a}.brand{font-weight:900;font-size:29px}.brand span{background:#fff;color:#ff2d69;border-radius:7px;padding:2px 7px;font-size:18px}.hero{text-align:center}.hero h1{margin:0;color:var(--gold);font-size:42px;line-height:1}.hero p{margin:8px 0 0;color:#ffcf4b;font-weight:900}.gift{justify-self:end;text-align:center;padding:12px 18px;border:1px solid #8d2fb6;border-radius:16px;background:#170d2d}.gift b{font-size:20px}.gift small{display:block;color:#ffc64a}
+.layout{display:grid;grid-template-columns:280px 1fr 300px;gap:15px;margin-top:15px}.panel,.stat,.status{background:linear-gradient(180deg,#0d1432,#080c20);border:1px solid var(--line);border-radius:17px}.panel{overflow:hidden}.ph{padding:14px 15px;border-bottom:1px solid var(--line);font-weight:900}.count{float:right;background:white;color:#15192d;padding:2px 8px;border-radius:99px}.person{display:flex;gap:10px;align-items:center;padding:10px;border-bottom:1px solid #1d2445}.avatar{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#3158a5,#a62a83);font-weight:900}.person b{display:block}.person small{color:#aeb7d6}.empty{text-align:center;padding:28px;color:#7f89ae}.main{display:flex;flex-direction:column;gap:13px}.controls{display:flex;gap:10px}.name{flex:1;padding:14px;border:0;border-radius:12px;background:white;color:#111;min-width:0}.btn{border:0;border-radius:12px;padding:13px 19px;font-weight:900}.start{background:linear-gradient(135deg,#08ef9b,#10bd78);color:#00150d}.new{background:white;color:#111}.banner{padding:13px 16px;background:#61df70;color:#061209;border-radius:13px;font-weight:900;font-size:18px}.result{display:grid;grid-template-columns:1fr 1fr;gap:10px}.stat{padding:13px}.stat span{display:block;color:var(--mut);font-size:13px}.stat b{font-size:24px}.status{text-align:center;padding:15px}.status h2{margin:0;color:var(--gold)}.status p{margin:5px 0 0;color:var(--mut)}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;padding:25px;border-radius:18px;background:radial-gradient(circle,#3a104e,#160b2b 50%,#070817);border:1px solid #42176d;min-height:350px;align-items:center}.card{aspect-ratio:2/3;max-height:300px;border-radius:13px;border:5px solid #ece7d7;box-shadow:0 12px 30px #0009;position:relative;display:grid;place-items:center}.back{background:repeating-linear-gradient(45deg,#10162f 0 6px,#1b2342 6px 12px);color:#ffc039;font-size:62px}.face{background:white;color:#111;display:flex;flex-direction:column;justify-content:space-between;padding:12px;font-weight:900}.face.red{color:#d3294c}.rank{font-size:54px}.suit{font-size:48px}.corner{position:absolute;left:8px;top:6px}.corner2{position:absolute;right:8px;bottom:6px;transform:rotate(180deg)}.winner{color:#ffd34f;font-weight:900}.historyRow{display:flex;justify-content:space-between;padding:11px;border-bottom:1px solid #1d2445}.historyRow small{color:#8c96b8}.footer{display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding:14px;border-top:1px solid #272e55;color:#b2bad5}.settings{background:transparent;color:#cbd2ea;border:1px solid #394267;border-radius:99px;padding:10px 15px}.modal{display:none;position:fixed;inset:0;background:#000a;align-items:center;justify-content:center;padding:20px}.modal.open{display:flex}.modalbox{max-width:520px;width:100%;background:#0c1230;border:1px solid #3b4676;border-radius:18px;padding:20px}.close{float:right;background:none;border:0;color:white;font-size:28px}
+@media(max-width:1050px){
+  .app{max-width:100%;padding:12px}
+  .layout{grid-template-columns:1fr}
+  .top{grid-template-columns:1fr;gap:10px;text-align:center}
+  .gift{justify-self:center}
+  .brand{text-align:center}
+  .hero h1{font-size:34px}
+  .layout>.panel:first-child{order:2}
+  .main{order:1}
+  .layout>.panel:last-child{order:3}
+}
+@media(max-width:600px){
+  html,body{width:100%;min-width:0;overflow-x:hidden}
+  body{font-size:15px}
+  .app{width:100%;max-width:none;margin:0;padding:8px}
+  .top{padding:4px 0 10px}
+  .brand{font-size:24px}
+  .brand span{font-size:15px}
+  .hero h1{font-size:27px}
+  .hero p{font-size:13px;margin-top:5px}
+  .gift{width:100%;padding:10px;border-radius:13px}
+  .layout{display:flex;flex-direction:column;gap:10px;margin-top:10px}
+  .main{width:100%;gap:9px}
+  .controls{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+  .name{grid-column:1/-1;width:100%;min-width:0;padding:14px;font-size:16px}
+  .btn{width:100%;padding:13px 8px;font-size:14px}
+  .banner{font-size:16px;padding:12px}
+  .result{gap:7px}
+  .stat{padding:10px}
+  .stat b{font-size:21px}
+  .status{padding:12px}
+  .status h2{font-size:20px}
+  .status p{font-size:13px}
+  .cards{
+    width:100%;
+    min-height:0;
+    height:auto;
+    gap:8px;
+    padding:15px 9px 18px;
+    border-radius:16px;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+  }
+  .card{
+    width:100%;
+    max-height:none;
+    min-width:0;
+    aspect-ratio:2/3;
+    border-width:3px;
+    border-radius:11px;
+  }
+  .rank{font-size:clamp(28px,9vw,45px)}
+  .suit{font-size:clamp(25px,8vw,42px)}
+  .corner{left:5px;top:4px}
+  .corner2{right:5px;bottom:4px}
+  .back{font-size:clamp(35px,12vw,60px)}
+  .panel{border-radius:14px}
+  .ph{padding:12px}
+  .person{padding:8px}
+  .footer{flex-direction:column;gap:10px;text-align:center}
+  .footer .settings{width:100%}
+}
+@media(min-width:601px) and (max-width:1050px){
+  .cards{min-height:430px}
+  .card{max-height:360px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top"><div class="brand">🎴 3 KART <span>LIVE</span></div><div class="hero"><h1>♛ 3 KART OYUNU</h1><p>HƏDİYYƏ GÖNDƏR • OYUNA QOŞUL</p></div><div class="gift">🎁 <b>Parfüm</b><small>20 coin • giriş hədiyyəsi</small></div></header>
+<section class="layout">
+<aside class="panel"><div class="ph">🎮 GÖZLƏYƏN OYUNÇULAR <span class="count" id="qc">0</span></div><div id="queue"></div></aside>
+<main class="main">
+<div class="controls"><input id="name" class="name" placeholder="Oyunçu adı"><button class="btn start" id="start">▶ RAUNDU BAŞLAT</button><button class="btn new" id="new">Yeni raund</button></div>
+<div class="banner">🎁 Parfüm (20) göndərildi — oyuna qoş</div>
+<div class="result"><div class="stat"><span>👥 Oyunçu sayı</span><b id="pc">0</b></div><div class="stat"><span>🃏 Hər oyunçuya</span><b>3 kart</b></div></div>
+<div class="status"><h2 id="st">RAUND HAZIRDIR</h2><p id="sub">“Raundu başlat” düyməsini basın</p></div>
+<div class="cards" id="cards"><div class="card back">♠</div><div class="card back">♠</div><div class="card back">♠</div></div>
+<div class="result"><div class="stat"><span>🏆 Qalib</span><b id="winner">—</b></div><div class="stat"><span>⭐ Xal</span><b id="score">—</b></div></div>
+</main>
+<aside class="panel"><div class="ph">🏆 SON RAUNDUN QALİBİ</div><div id="last" class="empty">Hələ raund oynanmayıb</div><div class="ph">↻ RAUND TARİXİ</div><div id="hist" class="empty">Hələ heç bir raund yoxdur</div></aside>
+</section>
+<footer class="footer"><button class="settings" id="settings">⚙️ AYARLAR</button><div>🎁 <b>Parfüm (20)</b> göndər, oyuna qoşul!<br><small>Daha çox şans, daha çox əyləncə!</small></div><b>🎵 TikTok LIVE</b></footer>
+</div>
+<div class="modal" id="modal"><div class="modalbox"><button class="close" id="close">×</button><h2>⚙️ Oyun qaydaları</h2><p>36 kart — 6,7,8,9,10,J,Q,K,A × ♠ ♥ ♦ ♣</p><p>666=32, 777=21, 888=24, 999=27, 10/J/Q/K=30, AAA=33.</p><p>Digər kombinasiyada eyni işarəli kartların cəmi götürülür; heç bir işarə təkrarlanmırsa ən böyük kartın xalı götürülür.</p></div></div>
+<script>
+const R=['6','7','8','9','10','J','Q','K','A'],S=['♠','♥','♦','♣'];let deck=[],q=[],hist=[],rn=0;
+const $=x=>document.getElementById(x);function deckBuild(){deck=[];R.forEach(r=>S.forEach(s=>deck.push({r,s})))}function val(r){return r==='A'?11:['10','J','Q','K'].includes(r)?10:+r}
+function special(c){let r=c.map(x=>x.r);if(new Set(r).size!==1)return null;return {'6':32,'7':21,'8':24,'9':27,'10':30,'J':30,'Q':30,'K':30,'A':33}[r[0]]}
+function score(c){let sp=special(c);if(sp!==null)return sp;let sums={};c.forEach(x=>sums[x.s]=(sums[x.s]||0)+val(x.r));let vals=Object.values(sums);return vals.length<c.length?Math.max(...vals):Math.max(...c.map(x=>val(x.r)))}
+function shuffle(a){for(let i=a.length-1;i;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function draw(){if(deck.length<3)deckBuild();shuffle(deck);return [deck.pop(),deck.pop(),deck.pop()]}
+function render(){ $('qc').textContent=q.length;$('pc').textContent=q.length;$('queue').innerHTML=q.map(p=>`<div class="person"><div class="avatar">${p.name[0].toUpperCase()}</div><div><b>${p.name}</b><small>Parfüm göndərdi • ${p.t}</small></div></div>`).join('')||'<div class="empty">Hələ oyunçu yoxdur.<br>20 coin hədiyyəsi göndərənlər burada görünəcək.</div>'}
+function add(n){n=(n||'').trim();if(!n||q.some(x=>x.name===n))return;q.push({name:n,t:new Date().toLocaleTimeString('az-AZ',{hour:'2-digit',minute:'2-digit'})});render()}
+function face(c){let red=['♥','♦'].includes(c.s);return `<div class="card face ${red?'red':''}"><span class="corner">${c.r}<br>${c.s}</span><span class="rank">${c.r}</span><span class="suit">${c.s}</span><span class="corner2">${c.r}<br>${c.s}</span></div>`}
+function start(){if(!q.length)add($('name').value||'DemoPlayer');$('name').value='';if(!q.length)return;rn++;deckBuild();let a=q.map(p=>({p,c:draw()})).map(x=>({...x,sc:score(x.c)})).sort((a,b)=>b.sc-a.sc),w=a[0];$('st').textContent='RAUND BİTDİ 🏆';$('sub').textContent=`${a.length} oyunçu üçün kartlar hesablandı`;$('cards').innerHTML=w.c.map(face).join('');$('winner').textContent=w.p.name;$('score').textContent=w.sc;$('last').innerHTML=`<div style="font-size:26px">🏆</div><div class="winner">${w.p.name}</div><div>${w.sc} xal</div>`;hist.unshift({n:rn,p:w.p.name,s:w.sc,t:new Date().toLocaleTimeString('az-AZ',{hour:'2-digit',minute:'2-digit')});$('hist').innerHTML=hist.slice(0,8).map(h=>`<div class="historyRow"><span>#${h.n} <b>${h.p}</b></span><span class="winner">${h.s} xal<br><small>${h.t}</small></span></div>`).join('')}
+function fresh(){$('st').textContent='RAUND HAZIRDIR';$('sub').textContent='“Raundu başlat” düyməsini basın';$('cards').innerHTML='<div class="card back">♠</div><div class="card back">♠</div><div class="card back">♠</div>';$('winner').textContent='—';$('score').textContent='—'}
+$('start').onclick=start;$('new').onclick=fresh;$('name').onkeydown=e=>{if(e.key==='Enter'){add(e.target.value);e.target.value=''}};$('settings').onclick=()=>$('modal').classList.add('open');$('close').onclick=()=>$('modal').classList.remove('open');
+deckBuild();['Nurlan_77','Aysel.94','Qarabag_28','LemAn 🦋','Ilkin.official','Sevda ❤️','Elnur_324','Günel.03','Ramin.aze','Leyla🌸','Bəxtiyar','Şahin_007'].forEach(add);
+</script>
+</body></html>
