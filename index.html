@@ -111,3 +111,39 @@ $('start').onclick=start;$('new').onclick=fresh;$('name').onkeydown=e=>{if(e.key
 deckBuild();['Nurlan_77','Aysel.94','Qarabag_28','LemAn 🦋','Ilkin.official','Sevda ❤️','Elnur_324','Günel.03','Ramin.aze','Leyla🌸','Bəxtiyar','Şahin_007'].forEach(add);
 </script>
 </body></html>
+@media (max-width: 600px) {
+  .app {
+    width: 100%;
+    max-width: 100%;
+    padding: 8px;
+    margin: 0 auto;
+  }
+
+  h1 {
+    font-size: 30px;
+    margin: 8px 0;
+  }
+
+  .top {
+    gap: 8px;
+  }
+
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .cards {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .card {
+    min-width: 0;
+    height: 240px;
+  }
+
+  button {
+    font-size: 16px;
+    padding: 12px 8px;
+  }
+}
