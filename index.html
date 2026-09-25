@@ -358,6 +358,40 @@ async function resetGame(){
   }catch(e){}
 
   players = [];
+
+round_started = False
+cards_revealed = False
+
+SUITS = ["♥", "♦", "♣", "♠"]
+RANKS = ["6", "7", "8", "9", "10", "J", "Q", "K", "A"]
+
+deck = []
+  def build_deck():
+    cards = []
+
+    for suit in SUITS:
+        for rank in RANKS:
+            cards.append({
+                "rank": rank,
+                "suit": suit
+            })
+
+    import random
+    random.shuffle(cards)
+    return cards
+
+
+def give_cards(player):
+    global deck
+
+    if len(deck) < 3:
+        deck = build_deck()
+
+    player["cards"] = [
+        deck.pop(),
+        deck.pop(),
+        deck.pop()
+    ]
   revealed = false;
   roundStarted = false;
 
