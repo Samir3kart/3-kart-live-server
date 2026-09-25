@@ -215,18 +215,168 @@ body{margin:0}
 </div>
 <div class="modal" id="modal"><div class="modalbox"><button class="close" id="close">×</button><h2>⚙️ Oyun qaydaları</h2><p>36 kart — 6,7,8,9,10,J,Q,K,A × ♠ ♥ ♦ ♣</p><p>666=32, 777=21, 888=24, 999=27, 10/J/Q/K=30, AAA=33.</p><p>Digər kombinasiyada eyni işarəli kartların cəmi götürülür; heç bir işarə təkrarlanmırsa ən böyük kartın xalı götürülür.</p></div></div>
 <script>
-const R=['6','7','8','9','10','J','Q','K','A'],S=['♠','♥','♦','♣'];let deck=[],q=[],hist=[],rn=0;
-const $=x=>document.getElementById(x);function deckBuild(){deck=[];R.forEach(r=>S.forEach(s=>deck.push({r,s})))}function val(r){return r==='A'?11:['10','J','Q','K'].includes(r)?10:+r}
-function special(c){let r=c.map(x=>x.r);if(new Set(r).size!==1)return null;return {'6':32,'7':21,'8':24,'9':27,'10':30,'J':30,'Q':30,'K':30,'A':33}[r[0]]}
-function score(c){let sp=special(c);if(sp!==null)return sp;let sums={};c.forEach(x=>sums[x.s]=(sums[x.s]||0)+val(x.r));let vals=Object.values(sums);return vals.length<c.length?Math.max(...vals):Math.max(...c.map(x=>val(x.r)))}
-function shuffle(a){for(let i=a.length-1;i;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
-function draw(){if(deck.length<3)deckBuild();shuffle(deck);return [deck.pop(),deck.pop(),deck.pop()]}
-function render(){ $('qc').textContent=q.length;$('pc').textContent=q.length;$('queue').innerHTML=q.map(p=>`<div class="person"><div class="avatar">${p.name[0].toUpperCase()}</div><div><b>${p.name}</b><small>Parfüm göndərdi • ${p.t}</small></div></div>`).join('')||'<div class="empty">Hələ oyunçu yoxdur.<br>20 coin hədiyyəsi göndərənlər burada görünəcək.</div>'}
-function add(n){n=(n||'').trim();if(!n||q.some(x=>x.name===n))return;q.push({name:n,t:new Date().toLocaleTimeString('az-AZ',{hour:'2-digit',minute:'2-digit'})});render()}
-function face(c){let red=['♥','♦'].includes(c.s);return `<div class="card face ${red?'red':''}"><span class="corner">${c.r}<br>${c.s}</span><span class="rank">${c.r}</span><span class="suit">${c.s}</span><span class="corner2">${c.r}<br>${c.s}</span></div>`}
-function start(){if(!q.length){alert('Əvvəlcə ən azı 1 oyunçu əlavə edin.');return;}rn++;deckBuild();let a=q.map(p=>({p,c:draw()})).map(x=>({...x,sc:score(x.c)})).sort((a,b)=>b.sc-a.sc),w=a[0];$('st').textContent='RAUND BİTDİ 🏆';$('sub').textContent=`${a.length} oyunçu üçün kartlar hesablandı`;$('cards').innerHTML=w.c.map(face).join('');$('winner').textContent=w.p.name;$('score').textContent=w.sc;$('last').innerHTML=`<div style="font-size:26px">🏆</div><div class="winner">${w.p.name}</div><div>${w.sc} xal</div>`;hist.unshift({n:rn,p:w.p.name,s:w.sc,t:new Date().toLocaleTimeString('az-AZ',{hour:'2-digit',minute:'2-digit')});$('hist').innerHTML=hist.slice(0,8).map(h=>`<div class="historyRow"><span>#${h.n} <b>${h.p}</b></span><span class="winner">${h.s} xal<br><small>${h.t}</small></span></div>`).join('')}
-function fresh(){$('st').textContent='RAUND HAZIRDIR';$('sub').textContent='“Raundu başlat” düyməsini basın';$('cards').innerHTML='<div class="card back">♠</div><div class="card back">♠</div><div class="card back">♠</div>';$('winner').textContent='—';$('score').textContent='—'}
-$('start').onclick=start;$('new').onclick=fresh;$('joinGift').onclick=()=>{let n=$('name').value.trim();if(!n){let i=1;do{n='TikTok_Oyunçu_'+String(i).padStart(2,'0');i++;}while(q.some(x=>x.name===n));}if(q.some(x=>x.name===n)){alert('Bu oyunçu artıq siyahıdadır.');return;}add(n);$('name').value='';};$('name').onkeydown=e=>{if(e.key==='Enter'){let n=e.target.value.trim();if(!n){let i=1;do{n='TikTok_Oyunçu_'+String(i).padStart(2,'0');i++;}while(q.some(x=>x.name===n));}add(n);e.target.value=''}};$('settings').onclick=()=>$('modal').classList.add('open');$('close').onclick=()=>$('modal').classList.remove('open');
-deckBuild();['Nurlan_77','Aysel.94','Qarabag_28','LemAn 🦋','Ilkin.official','Sevda ❤️','Elnur_324','Günel.03','Ramin.aze','Leyla🌸','Bəxtiyar','Şahin_007'].forEach(add);
+<script>
+const $ = id => document.getElementById(id);
+
+let players = [];
+let revealed = false;
+let roundStarted = false;
+
+const suits = ["♥","♦","♣","♠"];
+const ranks = ["6","7","8","9","10","J","Q","K","A"];
+
+function makeDeck(){
+  let d = [];
+  for(const s of suits){
+    for(const r of ranks){
+      d.push({rank:r,suit:s});
+    }
+  }
+  return d.sort(() => Math.random() - 0.5);
+}
+
+let deck = makeDeck();
+const playerCards = {};
+
+function giveCards(username){
+  if(playerCards[username]) return;
+
+  if(deck.length < 3) deck = makeDeck();
+
+  playerCards[username] = [
+    deck.pop(),
+    deck.pop(),
+    deck.pop()
+  ];
+}
+
+function cardHTML(card, open){
+  if(!open){
+    return `<div class="card back">🂠</div>`;
+  }
+
+  return `
+    <div class="card face">
+      <b>${card.rank}</b>
+      <span>${card.suit}</span>
+    </div>
+  `;
+}
+
+function render(){
+  const box = $("cards");
+  if(!box) return;
+
+  box.innerHTML = "";
+
+  players.slice(0,12).forEach((p,i)=>{
+    const username = p.username || ("player"+i);
+    giveCards(username);
+
+    const cards = playerCards[username];
+
+    const div = document.createElement("div");
+    div.className = "player";
+
+    div.innerHTML = `
+      <div class="person">
+        <b>${i+1}. ${p.name || username}</b>
+      </div>
+
+      <div class="playerCards">
+        ${cards.map(c => cardHTML(c,revealed)).join("")}
+      </div>
+    `;
+
+    box.appendChild(div);
+  });
+
+  const st = $("st");
+  if(st){
+    st.textContent =
+      revealed ? "KARTLAR AÇILDI" :
+      roundStarted ? "RAUND BAŞLADI" :
+      "OYUNÇULAR GÖZLƏNİLİR";
+  }
+
+  const btn = $("start");
+  if(btn){
+    btn.textContent =
+      revealed ? "YENİ RAUND" :
+      roundStarted ? "KARTLARI AÇ" :
+      "RAUNDU BAŞLAT";
+  }
+}
+
+async function loadState(){
+  try{
+    const r = await fetch("/api/state");
+    const data = await r.json();
+
+    players = data.players || [];
+
+    players.forEach((p,i)=>{
+      giveCards(p.username || ("player"+i));
+    });
+
+    render();
+  }catch(e){
+    console.log(e);
+  }
+}
+
+async function startGame(){
+  if(players.length === 0){
+    alert("Hələ iştirakçı yoxdur!");
+    return;
+  }
+
+  if(players.length > 12){
+    alert("Maksimum 12 iştirakçı ola bilər!");
+    return;
+  }
+
+  if(!roundStarted){
+    roundStarted = true;
+    revealed = false;
+    render();
+    return;
+  }
+
+  if(roundStarted && !revealed){
+    revealed = true;
+    render();
+    return;
+  }
+
+  location.reload();
+}
+
+async function resetGame(){
+  try{
+    await fetch("/api/reset",{method:"POST"});
+  }catch(e){}
+
+  players = [];
+  revealed = false;
+  roundStarted = false;
+
+  for(const k in playerCards)
+    delete playerCards[k];
+
+  deck = makeDeck();
+  render();
+}
+
+if($("start"))
+  $("start").onclick = startGame;
+
+if($("new"))
+  $("new").onclick = resetGame;
+
+loadState();
+
+setInterval(loadState,1000);
+</script>
 </script>
 </body></html>
