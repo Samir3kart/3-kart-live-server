@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="az">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>3 Kart LIVE</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#08090d;color:#fff;font-family:Arial,sans-serif;overflow:hidden}
+.top{height:82px;padding:16px 28px;display:flex;justify-content:space-between;align-items:center;background:#11131a;border-bottom:1px solid #272a35}
+.logo{font-size:30px;font-weight:900}.logo span{color:#ff2d75}.status{padding:10px 16px;border-radius:20px;background:#1b1e27}
+.main{height:calc(100vh - 82px);padding:20px;display:flex;flex-direction:column;gap:18px}
+.hero{display:flex;justify-content:space-between;align-items:center}.round{font-size:26px;font-weight:800}.hint{color:#aeb2bf}
+.grid{flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:14px;min-height:0}
+.player{background:#12151d;border:2px solid #292d39;border-radius:18px;padding:14px;display:flex;flex-direction:column;min-height:0;position:relative}
+.player.leader{border-color:#ffd34d}.name{font-size:20px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.badge{font-size:12px;color:#9da3b3;margin-top:4px}.cards{display:flex;gap:8px;margin-top:auto}.card{height:130px;flex:1;border-radius:12px;display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,#252b42,#111421);border:1px solid #3c4563;font-size:28px;font-weight:900}.card.revealed{background:#191c25;border-color:#62697b}.score{font-size:25px;font-weight:900;margin-top:10px}.empty{opacity:.35;text-align:center;margin-top:30vh;font-size:24px}
+.controls{display:flex;gap:10px;justify-content:center}.controls button{border:0;border-radius:12px;padding:13px 22px;font-weight:900;font-size:16px;cursor:pointer}.start{background:#22d47b}.reveal{background:#ffd34d}.reset{background:#ff466f;color:white}
+@media(max-width:900px){.grid{grid-template-columns:repeat(3,1fr)}.card{height:90px}.name{font-size:16px}}
+</style>
+</head>
+<body>
+<header class="top"><div class="logo">3 KART <span>LIVE</span></div><div id="status" class="status">Gözləyir...</div></header>
+<main class="main">
+  <div class="hero"><div><div class="round" id="round">RAUND 1</div><div class="hint">Parfum göndərən iştirakçı avtomatik qoşulur</div></div><div class="controls">
+    <button class="start" onclick="api('/api/start-round')">RAUND BAŞLA</button>
+    <button class="reveal" onclick="api('/api/reveal')">KARTLARI AÇ</button>
+    <button class="reset" onclick="api('/api/reset')">SIFIRLA</button>
+  </div></div>
+  <section id="grid" class="grid"></section>
+</main>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+const socket=io();
+let current=null;
+socket.on("state",s=>{current=s;render()});
+async function api(url){
+  const r=await fetch(url,{method:"POST"});
+  const d=await r.json();
+  if(!d.ok) alert(d.error||d.reason||"Xəta");
+}
+function esc(x){return String(x).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function render(){
+ if(!current)return;
+ document.getElementById("round").textContent="RAUND "+current.round;
+ document.getElementById("status").textContent=current.running?"🔴 RAUND GEDİR":"🟢 GÖZLƏYİR";
+ const g=document.getElementById("grid");
+ if(!current.players.length){g.innerHTML='<div class="empty" style="grid-column:1/-1">Parfum göndərən ilk iştirakçını gözləyirik...</div>';return}
+ const max=Math.max(...current.players.map(p=>p.score),0);
+ g.innerHTML=current.players.map((p,i)=>{
+   const revealed=p.cards.some(x=>x!==null);
+   return `<article class="player ${p.score===max&&max>0?'leader':''}">
+     <div class="name">${i+1}. ${esc(p.name)}</div>
+     <div class="badge">🎁 Parfum • ${p.score} xal</div>
+     <div class="cards">${p.cards.map(v=>`<div class="card ${revealed?'revealed':''}">${revealed?(v>=0?'+':'')+v:'?'}</div>`).join('')}</div>
+     <div class="score">${p.score} XAL</div>
+   </article>`;
+ }).join("");
+}
+</script>
+</body>
+</html>
