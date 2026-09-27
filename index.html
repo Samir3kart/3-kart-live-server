@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="az">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>3 KART LIVE</title>
+<style>
+:root{--bg:#070b16;--panel:#10182b;--panel2:#0c1324;--line:#26345b;--text:#f6f8ff;--muted:#aab5d4;--pink:#ff3d9a;--gold:#ffd54a;--green:#2ee68a}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Arial,Helvetica,sans-serif;background:radial-gradient(circle at 50% 0,#18223f 0,#070b16 48%,#050812 100%);color:var(--text)}
+body{padding:12px}.app{max-width:1500px;margin:auto}
+header{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;padding:14px 18px;background:#0b1223e8;border:1px solid var(--line);border-radius:18px;box-shadow:0 14px 35px #0008}
+.brand{font-weight:900;font-size:22px}.brand span{color:#ff4ba8}.hero{text-align:center}.hero h1{margin:0;font-size:32px;color:var(--gold)}.hero p{margin:4px 0 0;color:var(--muted);font-size:12px;letter-spacing:2px;font-weight:800}
+.gift{justify-self:end;background:#2a1230;border:1px solid #e23a9c66;border-radius:13px;padding:10px 15px;text-align:left}.gift b{display:block;color:#fff}.gift small{color:#f2b5d9}
+.status{margin:12px 0;padding:10px 14px;border-radius:12px;background:#101a30;border:1px solid var(--line);text-align:center;color:var(--muted);font-weight:700}.status.ok{color:#9fffc9;border-color:#2ee68a66}.status.err{color:#ff9cae;border-color:#ff536f66}
+.layout{display:grid;grid-template-columns:280px minmax(0,1fr) 280px;gap:12px;margin-top:12px}
+.panel,.main{background:#0b1325d9;border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 14px 35px #0006}
+.ph{padding:13px 15px;background:#101a30;border-bottom:1px solid var(--line);font-weight:900;color:#dfe7ff}.ph span{float:right;color:var(--gold)}
+.queue{padding:10px;min-height:500px}.person{display:flex;gap:10px;align-items:center;padding:10px;margin-bottom:8px;background:#111b31;border:1px solid #233157;border-radius:12px}.avatar{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#242f50;color:#fff;font-weight:900}.person b{font-size:14px}.person small{display:block;color:var(--muted);margin-top:3px}.empty{padding:35px 15px;color:#7f8bab;text-align:center;line-height:1.5}
+.main{padding:14px}.controls{display:flex;gap:8px}.name{flex:1;min-width:0;background:#080e1d;border:1px solid var(--line);color:#fff;border-radius:11px;padding:12px;font-size:15px}.btn{border:0;border-radius:11px;padding:12px 16px;font-weight:900;cursor:pointer}.start{background:var(--green);color:#04130c}.new{background:#202b48;color:#fff}.btn:disabled{opacity:.45;cursor:not-allowed}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}.stat{background:#0e172b;border:1px solid #233157;border-radius:12px;padding:10px;text-align:center}.stat small{display:block;color:var(--muted);font-weight:700}.stat b{display:block;margin-top:4px;font-size:18px}
+.table{min-height:430px;border:1px solid #2b3a63;border-radius:16px;background:radial-gradient(circle at 50% 45%,#351b2d 0,#10182a 55%,#091020 100%);padding:18px}.tablehead{text-align:center}.tablehead h2{margin:4px 0;color:var(--gold)}.tablehead p{margin:0;color:var(--muted)}
+.playerGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:15px}.playerCard{background:#0a1120d9;border:1px solid #293a68;border-radius:13px;padding:10px}.playerCard .pname{font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.cards{display:flex;gap:6px;margin-top:8px}.card{flex:1;min-width:0;aspect-ratio:0.7;background:#f9fbff;color:#111;border-radius:9px;display:grid;place-items:center;font-size:26px;font-weight:900;border:2px solid #fff;box-shadow:0 5px 12px #0008}.card.back{background:repeating-linear-gradient(45deg,#171f3c,#171f3c 7px,#27345c 7px,#27345c 14px);color:#d9e1ff;border-color:#6674a5}.red{color:#c51e39}.score{margin-top:7px;color:var(--gold);font-weight:900;text-align:right}
+.winner{margin-top:10px;padding:15px;text-align:center;border-radius:14px;border:1px solid #f5cf4b88;background:#3a2c0c;color:#ffe991}.winner strong{display:block;font-size:24px;margin-top:3px}
+.history{padding:12px}.resultRow{padding:10px;border-bottom:1px solid #202c4d}.resultRow:last-child{border-bottom:0}.resultRow b{display:block}.resultRow span{color:var(--gold)}
+footer{margin-top:12px;text-align:center;color:#94a1c3;font-size:13px;padding:8px}
+@media(max-width:1000px){header{grid-template-columns:1fr}.gift{justify-self:stretch}.layout{grid-template-columns:1fr}.queue{min-height:auto;max-height:320px;overflow:auto}.playerGrid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){body{padding:7px}.hero h1{font-size:24px}.controls{flex-wrap:wrap}.name{flex-basis:100%}.btn{flex:1}.stats{grid-template-columns:1fr 1fr 1fr}.playerGrid{grid-template-columns:1fr}.table{min-height:300px;padding:10px}.card{font-size:22px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="brand">🎴 3 KART <span>LIVE</span></div>
+  <div class="hero"><h1>👑 3 KART OYUNU</h1><p>HƏDİYYƏ GÖNDƏR • OYUNA QOŞUL</p></div>
+  <div class="gift">🎁 <b>Parfüm</b><small>20 coin • giriş hədiyyəsi</small></div>
+</header>
+
+<div id="status" class="status">🟡 Serverə qoşulur...</div>
+
+<section class="layout">
+  <aside class="panel">
+    <div class="ph">🎮 GÖZLƏYƏN OYUNÇULAR <span id="count">0 / 12</span></div>
+    <div id="queue" class="queue"></div>
+  </aside>
+
+  <main class="main">
+    <div class="controls">
+      <input id="name" class="name" placeholder="Test üçün oyunçu adı">
+      <button id="giftBtn" class="btn new">🎁 Parfüm — qoş</button>
+      <button id="startBtn" class="btn start">▶ RAUNDU BAŞLAT</button>
+      <button id="resetBtn" class="btn new">Yeni raund</button>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><small>👥 Oyunçu sayı</small><b id="pc">0</b></div>
+      <div class="stat"><small>🎁 Giriş hədiyyəsi</small><b>Parfüm</b></div>
+      <div class="stat"><small>🃏 Hər oyunçuya</small><b>3 kart</b></div>
+    </div>
+
+    <div class="table">
+      <div class="tablehead"><h2 id="roundTitle">RAUND HAZIRDIR</h2><p id="roundSub">Parfüm göndərənlər avtomatik qoşulur. Kartlar raund başlayana qədər bağlı qalır.</p></div>
+      <div id="playerGrid" class="playerGrid"></div>
+      <div id="winner" class="winner" style="display:none"></div>
+    </div>
+  </main>
+
+  <aside class="panel">
+    <div class="ph">🏆 RAUND NƏTİCƏSİ</div>
+    <div id="history" class="history"><div class="empty">Hələ raund oynanmayıb.</div></div>
+  </aside>
+</section>
+
+<footer>🎁 Parfüm göndər → avtomatik oyuna qoşul • 🎵 TikTok LIVE</footer>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+let state=null;
+let busy=false;
+
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function cardHTML(c){
+  if(!c) return '<div class="card back">♠</div>';
+  const red=c.suit==="♥"||c.suit==="♦";
+  return `<div class="card ${red?"red":""}"><span>${esc(c.rank)}<br>${esc(c.suit)}</span></div>`;
+}
+function render(s){
+  state=s;
+  $("count").textContent=`${s.count} / ${s.max_players}`;
+  $("pc").textContent=s.count;
+  const players=s.players||[];
+  $("queue").innerHTML=players.length?players.map((p,i)=>`<div class="person"><div class="avatar">${esc(p.name[0]||"?").toUpperCase()}</div><div><b>${i+1}. ${esc(p.name)}</b><small>🎁 Parfüm • 3 bağlı kart</small></div></div>`).join(""):'<div class="empty">Parfüm göndərən iştirakçılar burada görünəcək.</div>';
+
+  $("playerGrid").innerHTML=players.length?players.map((p,i)=>`
+    <div class="playerCard">
+      <div class="pname">${i+1}. ${esc(p.name)}</div>
+      <div class="cards">${(p.cards||[null,null,null]).map(cardHTML).join("")}</div>
+      ${p.score!=null?`<div class="score">${p.score} xal</div>`:""}
+    </div>`).join(""):'<div class="empty" style="grid-column:1/-1">İştirakçı gözlənilir...</div>';
+
+  if(s.round?.status==="finished" && s.round.winner){
+    $("roundTitle").textContent=`🏆 ${s.round.winner.name} QALİB`;
+    $("roundSub").textContent=`Nəticə: ${s.round.winner.score} xal`;
+    $("winner").style.display="block";
+    $("winner").innerHTML=`🏆 QALİB<strong>${esc(s.round.winner.name)}</strong><div>${s.round.winner.score} xal</div>`;
+    $("history").innerHTML=(s.round.results||[]).map((r,i)=>`<div class="resultRow"><b>${i+1}. ${esc(r.name)}</b><span>${r.score} xal</span></div>`).join("");
+  } else {
+    $("roundTitle").textContent="RAUND HAZIRDIR";
+    $("roundSub").textContent="Kartlar raund başlayana qədər bağlı qalır.";
+    $("winner").style.display="none";
+    $("history").innerHTML='<div class="empty">Raundu başladanda nəticələr burada görünəcək.</div>';
+  }
+
+  $("startBtn").disabled=players.length===0 || s.round?.status==="finished" || busy;
+}
+
+async function api(url,options={}){
+  const r=await fetch(url,{headers:{"Content-Type":"application/json"},...options});
+  const data=await r.json().catch(()=>({}));
+  if(!r.ok) throw new Error(data.error||"Server xətası");
+  return data;
+}
+
+async function addTestPlayer(){
+  const name=$("name").value.trim();
+  if(!name){$("name").focus();return}
+  try{
+    await api("/api/gift",{method:"POST",body:JSON.stringify({gift_name:"Parfüm",username:name})});
+    $("name").value="";
+  }catch(e){showError(e.message)}
+}
+async function startRound(){
+  if(busy)return;
+  busy=true; $("startBtn").disabled=true;
+  try{
+    const data=await api("/api/round/start",{method:"POST",body:"{}"});
+    render(data.state);
+  }catch(e){showError(e.message)}
+  finally{busy=false;if(state)render(state)}
+}
+async function resetRound(){
+  try{const data=await api("/api/round/reset",{method:"POST",body:"{}"});render(data.state)}
+  catch(e){showError(e.message)}
+}
+function showError(msg){$("status").className="status err";$("status").textContent="❌ "+msg;setTimeout(()=>{$("status").className="status ok";$("status").textContent="🟢 Server işləyir"},3000)}
+
+$("giftBtn").onclick=addTestPlayer;
+$("startBtn").onclick=startRound;
+$("resetBtn").onclick=resetRound;
+$("name").addEventListener("keydown",e=>{if(e.key==="Enter")addTestPlayer()});
+
+async function boot(){
+  try{
+    const data=await api("/api/state");
+    render(data);
+    $("status").className="status ok";
+    $("status").textContent="🟢 3 Kart server qoşuludur";
+  }catch(e){
+    $("status").className="status err";
+    $("status").textContent="❌ Serverə qoşulmaq alınmadı";
+  }
+}
+function connectEvents(){
+  const es=new EventSource("/api/events");
+  es.onmessage=e=>{try{render(JSON.parse(e.data));$("status").className="status ok";$("status").textContent="🟢 Server canlıdır"}catch(_){}};
+  es.onerror=()=>{ $("status").className="status"; $("status").textContent="🟡 Bağlantı yenidən qurulur..."; };
+}
+boot(); connectEvents();
+</script>
+</body>
+</html>
